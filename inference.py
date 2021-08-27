@@ -89,7 +89,7 @@ class TestModel(tools.abs_test_model):
 def inference():
     pretrain_path = './scripts/upflow_kitti2015.pth'
     test_model = TestModel(pretrain_path=pretrain_path)
-    data_path = '/D_data/Seg/data/ObjectTest/images'
+    data_path = '../data/ObjectTest/images'
     output_path = './results_upflow_object_test'
     # objects = ['cup']
     objects = ['cell_phone', 'pen', 'paper']
