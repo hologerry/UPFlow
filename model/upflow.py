@@ -611,7 +611,7 @@ class UPFlow_net(tools.abstract_model):
             'multi_scale_distillation_weight': 1,
             'multi_scale_distillation_style': 'upup',
             'multi_scale_photo_weight': 1,  # 'down', 'upup', 'updown'
-            'multi_scale_distillation_occ': True,  # if consider occlusion mask in multiscale distilation
+            'multi_scale_distillation_occ': True,  # if consider occlusion mask in multiscale distillation
             'if_froze_pwc': False,
             'input_or_sp_input': 1,
             'if_use_boundary_warp': True,
@@ -620,12 +620,12 @@ class UPFlow_net(tools.abstract_model):
         net_conf = UPFlow_net.config()
         net_conf.update(param_dict)
         net_conf.get_name(print_now=True)
-        net = net_conf()  # .cuda()
+        net = net_conf().cuda()
         net.eval()
         im = np.random.random((1, 3, 320, 320))
         start = np.zeros((1, 2, 1, 1))
-        start = torch.from_numpy(start).float()  # .cuda()
-        im_torch = torch.from_numpy(im).float()  # .cuda()
+        start = torch.from_numpy(start).float().cuda()
+        im_torch = torch.from_numpy(im).float().cuda()
         input_dict = {'im1': im_torch, 'im2': im_torch,
                       'im1_raw': im_torch, 'im2_raw': im_torch, 'im1_sp': im_torch, 'im2_sp': im_torch, 'start': start, 'if_loss': True}
         output_dict = net(input_dict)

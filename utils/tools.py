@@ -1,31 +1,32 @@
+import argparse
+import array
+import collections
+import os
+import pickle
+import random
+import shutil
+import time
+import warnings
+import zipfile
+from shutil import rmtree
+
+import cv2
+import imageio
+import numpy as np
+import png
 import torch
-from torch.utils.data.dataloader import _DataLoaderIter, DataLoader  # need torch.__version__ == '1.1.0'
+import torch.nn as nn
+import torch.nn.functional as F
 # from torch.utils.data import DataLoader
 # if torch.__version__ == '1.5.1' or torch.__version__ == '1.4.0' use this
 # from torch.utils.data.dataloader import _MultiProcessingDataLoaderIter as _DataLoaderIter
 # from torch.utils.data.dataloader import DataLoader
 import torch.optim as optim
-import imageio
-import cv2
-import numpy as np
-import os
-import torch.nn as nn
-import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
-import torch
-from torch.nn.init import xavier_normal, kaiming_normal
+from torch.nn.init import kaiming_normal, xavier_normal
 from torch.utils.data import Dataset
-import pickle
-import argparse
-import collections
-import random
-from shutil import rmtree
-import time
-import zipfile
-import png
-import array
-import warnings
-import shutil
+from torch.utils.data.dataloader import (  # need torch.__version__ == '1.1.0'
+    DataLoader, _DataLoaderIter)
 
 
 class tools():
@@ -167,7 +168,8 @@ class tools():
 
         def __init__(self, dataset, gpu_opt=None, batch_size=1, shuffle=False, num_workers=0, pin_memory=False, drop_last=False):
             self.dataset = dataset
-            loader = DataLoader(dataset=self.dataset, batch_size=batch_size, num_workers=num_workers, shuffle=shuffle, drop_last=drop_last, pin_memory=pin_memory)
+            loader = DataLoader(dataset=self.dataset, batch_size=batch_size, num_workers=num_workers,
+                                shuffle=shuffle, drop_last=drop_last, pin_memory=pin_memory)
             # self.loader = iter(loader)
             self.loader = _DataLoaderIter(loader)
             self.stream = torch.cuda.Stream()
@@ -180,7 +182,8 @@ class tools():
             self.drop_last = drop_last
 
         def build(self):
-            loader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=self.shuffle, drop_last=self.drop_last, pin_memory=self.pin_memory)
+            loader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, num_workers=self.num_workers,
+                                shuffle=self.shuffle, drop_last=self.drop_last, pin_memory=self.pin_memory)
             self.loader = _DataLoaderIter(loader)
             # self.loader = iter(loader)
 
@@ -688,12 +691,15 @@ class tools():
             for i in range(img.shape[1]):  # x
                 for j in range(img.shape[0]):  # y
                     # if flow[j, i, 2] != 1: continue
-                    if valid[j, i] != 1: continue
-                    if j % 10 != 0 or i % 10 != 0: continue
+                    if valid[j, i] != 1:
+                        continue
+                    if j % 10 != 0 or i % 10 != 0:
+                        continue
                     xend = int((meshgrid[0][j, i] + flow[j, i, 0]) * 4)
                     yend = int((meshgrid[1][j, i] + flow[j, i, 1]) * 4)
                     leng = np.linalg.norm(flow[j, i, :2])
-                    if leng < 1: continue
+                    if leng < 1:
+                        continue
                     dispimg = cv2.arrowedLine(dispimg, (meshgrid[0][j, i] * 4, meshgrid[1][j, i] * 4), (xend, yend),
                                               (int(colorflow[j, i, 0]), int(colorflow[j, i, 1]), int(colorflow[j, i, 2])), 3,
                                               tipLength=8 / leng, line_type=cv2.LINE_AA)
@@ -943,8 +949,8 @@ class tools():
                 xq, yq = tools.SP_transform.denormalize_coords(xq, yq, width=width, height=height)
                 #
                 invalid = (
-                                  (xq < 0) | (yq < 0) | (xq >= width) | (yq >= height)
-                          ).sum(dim=1, keepdim=True) > 0
+                    (xq < 0) | (yq < 0) | (xq >= width) | (yq >= height)
+                ).sum(dim=1, keepdim=True) > 0
 
                 return invalid
 
@@ -1098,6 +1104,7 @@ class tools():
         @classmethod
         def demo(cls):
             import pickle
+
             import cv2
             im0 = cv2.imread("/data/luokunming/Optical_Flow_all/projects/Forward-Warp-master/test/im0.png")[np.newaxis, :, :, :]
             im1 = cv2.imread("/data/luokunming/Optical_Flow_all/projects/Forward-Warp-master/test/im1.png")[np.newaxis, :, :, :]

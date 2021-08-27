@@ -14,12 +14,12 @@ def upsample2d_as(inputs, target_as, mode="bilinear"):
 class loss_functions():
 
     @classmethod
-    def photo_loss_function(cls, diff, mask, q, charbonnier_or_abs_robust, if_use_occ, averge=True):
+    def photo_loss_function(cls, diff, mask, q, charbonnier_or_abs_robust, if_use_occ, average=True):
         if charbonnier_or_abs_robust:
             if if_use_occ:
                 p = ((diff) ** 2 + 1e-6).pow(q)
                 p = p * mask
-                if averge:
+                if average:
                     p = p.mean()
                     ap = mask.mean()
                 else:
@@ -28,7 +28,7 @@ class loss_functions():
                 loss_mean = p / (ap * 2 + 1e-6)
             else:
                 p = ((diff) ** 2 + 1e-8).pow(q)
-                if averge:
+                if average:
                     p = p.mean()
                 else:
                     p = p.sum()
@@ -41,7 +41,7 @@ class loss_functions():
                 loss_mean = diff_sum / (torch.sum(mask) * 2 + 1e-6)
             else:
                 diff = (torch.abs(diff) + 0.01).pow(q)
-                if averge:
+                if average:
                     loss_mean = diff.mean()
                 else:
                     loss_mean = diff.sum()
@@ -87,7 +87,7 @@ class loss_functions():
         transform_mask = create_mask_torch(mask, [[max_distance, max_distance],
                                                   [max_distance, max_distance]])
         census_loss = cls.photo_loss_function(diff=dist, mask=mask * transform_mask, q=q,
-                                              charbonnier_or_abs_robust=charbonnier_or_abs_robust, if_use_occ=if_use_occ, averge=averge)
+                                              charbonnier_or_abs_robust=charbonnier_or_abs_robust, if_use_occ=if_use_occ, average=averge)
         return census_loss
 
     @classmethod

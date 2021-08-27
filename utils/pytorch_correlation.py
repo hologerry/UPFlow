@@ -10,7 +10,7 @@ from utils.tools import tools
 class Corr_pyTorch(tools.abstract_model):
     '''
     my implementation of correlation layer using pytorch
-    note that the Ispeed is much slower than cuda version
+    note that the speed is much slower than cuda version
     '''
 
     def __init__(self, pad_size=4, kernel_size=1, max_displacement=4, stride1=1, stride2=1, corr_multiply=1):
