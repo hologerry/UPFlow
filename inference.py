@@ -91,8 +91,8 @@ def inference():
     test_model = TestModel(pretrain_path=pretrain_path)
     data_path = '../data/ObjectTest/images'
     output_path = './results_upflow_object_test'
-    # objects = ['cup']
-    objects = ['cell_phone', 'pen', 'paper']
+    objects = ['paper']
+    # objects = ['cup', 'cell_phone', 'pen', 'paper']
     for obj in objects:
         cur_object_output_path = os.path.join(output_path, obj)
         print(f"----> run inference on object test data, object: {obj}")
